@@ -2,6 +2,7 @@ package org.acme;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.quarkus.runtime.annotations.StaticInitSafe;
 import io.smallrye.config.ConfigMapping;
@@ -12,26 +13,33 @@ import io.smallrye.config.WithParentName;
 @ConfigMapping(prefix = "my")
 public interface MyConfig {
 
-    @WithName("config.main")
-    List<MyMapping> sources();
-
-    @WithName("config.urls")
-    Map<Integer, String> urls();
-
     @WithParentName
-    Map<String, Config> types();
+    Optional<Properties> properties();
 
-    interface MyMapping {
-        String key();
+    interface Properties {
 
-        List<String> id();
-    }
+        @WithName("config.main")
+        List<MyMapping> sources();
 
-    public interface Config {
+        @WithName("config.urls")
+        Map<Integer, String> urls();
 
-        int maxConcurrentStart();
+        @WithParentName
+        Map<String, Config> types();
 
-        int maxConcurrentStop();
+        interface MyMapping {
+            String key();
+
+            List<String> id();
+        }
+
+        public interface Config {
+
+            int maxConcurrentStart();
+
+            int maxConcurrentStop();
+        }
+
     }
 
 }
